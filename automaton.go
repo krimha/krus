@@ -1,12 +1,14 @@
 package krus
 
+type NodeMap = map[rune]*node
+
 type node struct {
 	name string
-	edges map[rune]*node
+	edges NodeMap
 }
 
 func NewNode(name string) *node {
-	return &node { name, make(map[rune]*node) }
+	return &node { name, make(NodeMap) }
 }
 
 // GRAPH
