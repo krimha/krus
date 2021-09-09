@@ -3,7 +3,7 @@ package krus
 import "testing"
 
 func TestNewNode(t *testing.T) {
-	n := NewNode("q1")
+	n := newNode("q1")
 	result := n.name
 	expected := "q1"
 	if result != expected {

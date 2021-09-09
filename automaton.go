@@ -1,29 +1,29 @@
 package krus
 
-type NodeMap = map[rune]*node
+type nodeMap = map[rune]*node
 
 type node struct {
 	name string
-	edges NodeMap
+	edges nodeMap
 }
 
-func NewNode(name string) *node {
-	return &node { name, make(NodeMap) }
+func newNode(name string) *node {
+	return &node { name, make(nodeMap) }
 }
 
-// GRAPH
+// Finite state machine
 
-type Graph struct {
+type StateMachine struct {
 	nodes map[string]*node
 	start *node
 	accept []*node
 }
 
-func NewGraph(nodeNames []string, start string, acceptStates []string) Graph {
-	graph := Graph{ make(map[string]*node), nil, []*node{}}
+func NewGraph(nodeNames []string, start string, acceptStates []string) StateMachine {
+	graph := StateMachine{ make(map[string]*node), nil, []*node{}}
 
 	for _, name := range nodeNames {
-		graph.nodes[name] = NewNode(name)
+		graph.nodes[name] = newNode(name)
 	}
 
 	graph.start = graph.nodes[start]
@@ -35,13 +35,13 @@ func NewGraph(nodeNames []string, start string, acceptStates []string) Graph {
 	return graph
 }
 
-func (graph *Graph) Connect(source string, target string, symbol rune) {
+func (graph *StateMachine) Connect(source string, target string, symbol rune) {
 	sourceNode := graph.nodes[source]
 	targetNode := graph.nodes[target]
 	sourceNode.edges[symbol] = targetNode
 }
 
-func (graph Graph) Match(tomatch string) bool {
+func (graph StateMachine) Match(tomatch string) bool {
 	currentNode := graph.start
 	for _, symbol := range tomatch {
 		currentNode = currentNode.edges[symbol]
