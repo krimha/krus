@@ -1,15 +1,23 @@
 package krus
 
-// type nodeSet = map[*node]bool
 type nodeMap = map[rune]*node
 
 type node struct {
 	name  string
 	edges nodeMap
+	isAccept bool
 }
 
 func newNode(name string) *node {
-	return &node{name, make(nodeMap)}
+	return &node{name, make(nodeMap), false}
+}
+
+type nodeSet struct {
+	storage map[*node]bool
+}
+
+func (set *nodeSet) insertNode(newNode *node) {
+	set.storage[newNode] = true
 }
 
 // Finite state machine
@@ -17,11 +25,10 @@ func newNode(name string) *node {
 type StateMachine struct {
 	nodes  map[string]*node
 	start  *node
-	accept []*node
 }
 
 func NewGraph(nodeNames []string, start string, acceptStates []string) StateMachine {
-	graph := StateMachine{make(map[string]*node), nil, []*node{}}
+	graph := StateMachine{make(map[string]*node), nil }
 
 	for _, name := range nodeNames {
 		graph.nodes[name] = newNode(name)
@@ -30,7 +37,7 @@ func NewGraph(nodeNames []string, start string, acceptStates []string) StateMach
 	graph.start = graph.nodes[start]
 
 	for _, name := range acceptStates {
-		graph.accept = append(graph.accept, graph.nodes[name])
+		graph.nodes[name].isAccept = true
 	}
 
 	return graph
@@ -48,11 +55,5 @@ func (graph StateMachine) Match(tomatch string) bool {
 		currentNode = currentNode.edges[symbol]
 	}
 
-	// Check if accept state
-	for _, node := range graph.accept {
-		if node == currentNode {
-			return true
-		}
-	}
-	return false
+	return currentNode.isAccept
 }
