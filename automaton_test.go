@@ -40,5 +40,5 @@ func TestMatch(t *testing.T) {
 	if !g.Match("000111") {
 		t.Fatalf(`Should match "000111"`)
 	}
-	
+
 }

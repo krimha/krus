@@ -3,24 +3,24 @@ package krus
 type nodeMap = map[rune]*node
 
 type node struct {
-	name string
+	name  string
 	edges nodeMap
 }
 
 func newNode(name string) *node {
-	return &node { name, make(nodeMap) }
+	return &node{name, make(nodeMap)}
 }
 
 // Finite state machine
 
 type StateMachine struct {
-	nodes map[string]*node
-	start *node
+	nodes  map[string]*node
+	start  *node
 	accept []*node
 }
 
 func NewGraph(nodeNames []string, start string, acceptStates []string) StateMachine {
-	graph := StateMachine{ make(map[string]*node), nil, []*node{}}
+	graph := StateMachine{make(map[string]*node), nil, []*node{}}
 
 	for _, name := range nodeNames {
 		graph.nodes[name] = newNode(name)
