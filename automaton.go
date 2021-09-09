@@ -16,8 +16,22 @@ type nodeSet struct {
 	storage map[*node]bool
 }
 
-func (set *nodeSet) insertNode(newNode *node) {
+func newNodeSet() nodeSet {
+	return nodeSet{ make(map[*node]bool) }
+}
+
+func (set *nodeSet) Insert(newNode *node) {
 	set.storage[newNode] = true
+}
+
+func (set *nodeSet) InsertSet(other nodeSet) {
+	for n, _ := range other.storage {
+		set.storage[n] = true
+	}
+}
+
+func (set *nodeSet) Contains(n *node) bool {
+	return set.storage[n]
 }
 
 // Finite state machine
