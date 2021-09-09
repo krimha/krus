@@ -1,5 +1,6 @@
 package krus
 
+// type nodeSet = map[*node]bool
 type nodeMap = map[rune]*node
 
 type node struct {

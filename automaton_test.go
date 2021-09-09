@@ -27,6 +27,18 @@ func TestNewGraph(t *testing.T) {
 	}
 }
 
+func TestConnect(t *testing.T) {
+	g := NewGraph([]string{"q0", "q1"}, "q0", []string{"q1"})
+	g.Connect("q0", "q1", '1')
+
+	q0 := g.nodes["q0"]
+	q1 := g.nodes["q1"]
+	if q0.edges['1'] != q1 {
+		t.Fatalf("Connect does not work")
+	}
+
+}
+
 func TestMatch(t *testing.T) {
 	g := NewGraph([]string{"q0", "q1"}, "q0", []string{"q1"})
 	g.Connect("q0", "q1", '1')
