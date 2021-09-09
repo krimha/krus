@@ -1,6 +1,6 @@
 package krus
 
-type nodeMap = map[rune]*node
+type nodeMap = map[rune]*nodeSet
 
 type node struct {
 	name  string
@@ -60,14 +60,30 @@ func NewGraph(nodeNames []string, start string, acceptStates []string) StateMach
 func (graph *StateMachine) Connect(source string, target string, symbol rune) {
 	sourceNode := graph.nodes[source]
 	targetNode := graph.nodes[target]
-	sourceNode.edges[symbol] = targetNode
+	if sourceNode.edges[symbol] == nil {
+		newSet := newNodeSet()
+		sourceNode.edges[symbol] = &newSet
+	}
+	sourceNode.edges[symbol].Insert(targetNode)
 }
 
 func (graph StateMachine) Match(tomatch string) bool {
-	currentNode := graph.start
+	currentNodeSet := newNodeSet()
+	currentNodeSet.Insert(graph.start)
+
+	// TODO: Need to wrap this in another loop for the multiple nodes case
 	for _, symbol := range tomatch {
-		currentNode = currentNode.edges[symbol]
+		newCurrentNodeSet := newNodeSet()
+		for sourceNode, _ := range currentNodeSet.storage {
+			newCurrentNodeSet.InsertSet(*sourceNode.edges[symbol])
+		}
+		currentNodeSet = newCurrentNodeSet
 	}
 
-	return currentNode.isAccept
+	for n, _ := range currentNodeSet.storage {
+		if n.isAccept {
+			return true
+		}
+	}
+	return false
 }

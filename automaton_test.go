@@ -33,7 +33,7 @@ func TestConnect(t *testing.T) {
 
 	q0 := g.nodes["q0"]
 	q1 := g.nodes["q1"]
-	if q0.edges['1'] != q1 {
+	if !q0.edges['1'].Contains(q1) {
 		t.Fatalf("Connect does not work")
 	}
 
