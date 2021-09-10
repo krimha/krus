@@ -5,11 +5,34 @@ type nodeMap = map[rune]*nodeSet
 type node struct {
 	name  string
 	edges nodeMap
+	emptyEdges *nodeSet
 	isAccept bool
 }
 
 func newNode(name string) *node {
-	return &node{name, make(nodeMap), false}
+	newSet := newNodeSet()
+	return &node{name, make(nodeMap), &newSet, false}
+}
+
+func (this *node) EmptyReachable() nodeSet {
+	result := newNodeSet()
+	result.Insert(this)
+
+	for {
+		newNodes := newNodeSet()
+		for currNode, _ := range result.storage {
+			newNodes.InsertSet(*currNode.emptyEdges)
+		}
+		
+		oldLength := result.Size()
+		result.InsertSet(newNodes)
+		// No new nodes were found
+		if result.Size() == oldLength {
+			break
+		}
+	}
+
+	return result
 }
 
 // Finite state machine
@@ -45,6 +68,16 @@ func (graph *StateMachine) Connect(source string, target string, symbol rune) {
 	sourceNode.edges[symbol].Insert(targetNode)
 }
 
+func (graph *StateMachine) ConnectEmpty(source string, target string) {
+	sourceNode := graph.nodes[source]
+	targetNode := graph.nodes[target]
+	if sourceNode.emptyEdges == nil {
+		newSet := newNodeSet()
+		sourceNode.emptyEdges = &newSet
+	}
+	sourceNode.emptyEdges.Insert(targetNode)
+}
+
 func (graph StateMachine) Match(tomatch string) bool {
 	currentNodeSet := newNodeSet()
 	currentNodeSet.Insert(graph.start)
@@ -61,10 +94,5 @@ func (graph StateMachine) Match(tomatch string) bool {
 		currentNodeSet = newCurrentNodeSet
 	}
 
-	for n, _ := range currentNodeSet.storage {
-		if n.isAccept {
-			return true
-		}
-	}
-	return false
+	return currentNodeSet.ContainsAcceptNode()
 }

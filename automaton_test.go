@@ -71,3 +71,21 @@ func TestNewNonDeterministic(t *testing.T) {
 		t.Fatalf("Did not match")
 	}
 }
+
+func TestEmptyEdge(t *testing.T) {
+	g := NewGraph([]string{"0", "1", "2", "3", "4"}, "0", []string{"1"})
+	g.ConnectEmpty("0", "1")
+	g.ConnectEmpty("0", "2")
+	g.ConnectEmpty("2", "3")
+	g.ConnectEmpty("3", "2")
+	
+
+
+	empty := g.nodes["0"].EmptyReachable()
+
+	if empty.Size() != 4 {
+		t.Fatalf("Error in EmptyEdge %d", empty.Size())
+	}
+
+	
+}

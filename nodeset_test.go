@@ -30,3 +30,14 @@ func TestNodeSet(t *testing.T) {
 		t.Fatalf("setA does not contain a node from setB")
 	}
 }
+
+func TestSize(t *testing.T) {
+	setA := newNodeSet()
+	n := newNode("q")
+	setA.Insert(n)
+	setA.Insert(n)
+	
+	if setA.Size() != 1 {
+		t.Fatalf("Size is wrong")
+	}
+}
