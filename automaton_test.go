@@ -55,35 +55,6 @@ func TestMatch(t *testing.T) {
 
 }
 
-func TestNodeSet(t *testing.T) {
-
-	nodes := make([]*node, 6)
-	for i, name := range []string{"q1", "q2", "q3", "q4"} {
-		nodes[i] = newNode(name)
-	}
-
-	setA := newNodeSet()
-	setA.Insert(nodes[0])
-	setA.Insert(nodes[1])
-	setA.Insert(nodes[2])
-	
-	setB := newNodeSet()
-	setB.Insert(nodes[1])
-	setB.Insert(nodes[2])
-	setB.Insert(nodes[3])
-
-	setA.InsertSet(setB)
-
-	result := len(setA.storage)
-	if result != 4 {
-		t.Fatalf("setA contains the wrong number of elements %d", result)
-	}
-
-	if !setA.Contains(nodes[3]) {
-		t.Fatalf("setA does not contain a node from setB")
-	}
-}
-
 func TestNewNonDeterministic(t *testing.T) {
 	g := NewGraph([]string{"X", "0", "1", "2", "3"}, "X", []string{"3"})
 	g.Connect("X", "X", '0')
