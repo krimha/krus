@@ -83,3 +83,20 @@ func TestNodeSet(t *testing.T) {
 		t.Fatalf("setA does not contain a node from setB")
 	}
 }
+
+func TestNewNonDeterministic(t *testing.T) {
+	g := NewGraph([]string{"X", "0", "1", "2", "3"}, "X", []string{"3"})
+	g.Connect("X", "X", '0')
+	g.Connect("X", "X", '1')
+	g.Connect("X", "0", '1')
+	g.Connect("0", "1", '0')
+	g.Connect("0", "1", '1')
+	g.Connect("1", "2", '0')
+	g.Connect("1", "2", '1')
+	g.Connect("2", "3", '0')
+	g.Connect("2", "3", '1')
+
+	if ! g.Match("1110101010101001011000") {
+		t.Fatalf("Did not match")
+	}
+}

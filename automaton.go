@@ -34,6 +34,14 @@ func (set *nodeSet) Contains(n *node) bool {
 	return set.storage[n]
 }
 
+func (set nodeSet) String() string {
+	result := "["
+	for n, _ := range set.storage {
+		result += n.name + ", "
+	}
+	return result[:len(result)-2] + "]"
+}
+
 // Finite state machine
 
 type StateMachine struct {
@@ -75,7 +83,10 @@ func (graph StateMachine) Match(tomatch string) bool {
 	for _, symbol := range tomatch {
 		newCurrentNodeSet := newNodeSet()
 		for sourceNode, _ := range currentNodeSet.storage {
-			newCurrentNodeSet.InsertSet(*sourceNode.edges[symbol])
+			toInsert := sourceNode.edges[symbol]
+			if toInsert != nil {
+				newCurrentNodeSet.InsertSet(*sourceNode.edges[symbol])
+			}
 		}
 		currentNodeSet = newCurrentNodeSet
 	}
