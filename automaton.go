@@ -82,10 +82,10 @@ func (graph StateMachine) Match(tomatch string) bool {
 	currentNodeSet := newNodeSet()
 	currentNodeSet.Insert(graph.start)
 
-	// TODO: Need to wrap this in another loop for the multiple nodes case
 	for _, symbol := range tomatch {
 		newCurrentNodeSet := newNodeSet()
 		for sourceNode, _ := range currentNodeSet.storage {
+			// TODO Should get empty set instead?
 			toInsert := sourceNode.edges[symbol]
 			if toInsert != nil {
 				newCurrentNodeSet.InsertSet(*sourceNode.edges[symbol])

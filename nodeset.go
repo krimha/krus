@@ -43,3 +43,11 @@ func (set nodeSet) ContainsAcceptNode() bool {
 	}
 	return false
 }
+
+func (set *nodeSet) InsertReachable() {
+	newNodes := newNodeSet()
+	for n, _ := range set.storage {
+		newNodes.InsertSet(n.EmptyReachable())
+	}
+	set.InsertSet(newNodes)
+}
