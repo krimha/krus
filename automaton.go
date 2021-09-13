@@ -18,6 +18,10 @@ func (this *node) Edges(symbol rune) *nodeSet {
 	return this.edges[symbol]
 }
 
+func (this *node) SetEdges(symbol rune, targets *nodeSet) {
+	this.edges[symbol] = targets
+}
+
 func (this *node) EmptyReachable() nodeSet {
 	result := newNodeSet()
 	result.Insert(this)
@@ -71,7 +75,7 @@ func (graph *StateMachine) Connect(source string, target string, symbol rune) {
 	targetNode := graph.Node(target)
 	if sourceNode.Edges(symbol) == nil {
 		newSet := newNodeSet()
-		sourceNode.edges[symbol] = &newSet
+		sourceNode.SetEdges(symbol, &newSet)
 	}
 	sourceNode.Edges(symbol).Insert(targetNode)
 }
