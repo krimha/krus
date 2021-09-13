@@ -14,6 +14,10 @@ func newNode(name string) *node {
 	return &node{name, make(nodeMap), &newSet, false}
 }
 
+func (this *node) Edges(symbol rune) *nodeSet {
+	return this.edges[symbol]
+}
+
 func (this *node) EmptyReachable() nodeSet {
 	result := newNodeSet()
 	result.Insert(this)
@@ -58,14 +62,18 @@ func NewGraph(nodeNames []string, start string, acceptStates []string) StateMach
 	return graph
 }
 
+func (graph *StateMachine) Node(nodeName string) *node {
+	return graph.nodes[nodeName]
+}
+
 func (graph *StateMachine) Connect(source string, target string, symbol rune) {
-	sourceNode := graph.nodes[source]
-	targetNode := graph.nodes[target]
-	if sourceNode.edges[symbol] == nil {
+	sourceNode := graph.Node(source)
+	targetNode := graph.Node(target)
+	if sourceNode.Edges(symbol) == nil {
 		newSet := newNodeSet()
 		sourceNode.edges[symbol] = &newSet
 	}
-	sourceNode.edges[symbol].Insert(targetNode)
+	sourceNode.Edges(symbol).Insert(targetNode)
 }
 
 func (graph *StateMachine) ConnectEmpty(source string, target string) {
@@ -87,9 +95,9 @@ func (graph StateMachine) Match(tomatch string) bool {
 		newCurrentNodeSet := newNodeSet()
 		for sourceNode, _ := range currentNodeSet.storage {
 			// TODO Should get empty set instead?
-			toInsert := sourceNode.edges[symbol]
+			toInsert := sourceNode.Edges(symbol)
 			if toInsert != nil {
-				newCurrentNodeSet.InsertSet(*sourceNode.edges[symbol])
+				newCurrentNodeSet.InsertSet(*sourceNode.Edges(symbol))
 			}
 		}
 		currentNodeSet = newCurrentNodeSet

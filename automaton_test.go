@@ -104,7 +104,18 @@ func TestMatchEmpty(t *testing.T) {
 	g.ConnectEmpty("q", "r")
 	g.ConnectEmpty("s", "t")
 
-	if !g.Match("111") {
+	if !g.Match("11") {
+		t.Fatalf("No Match")
+	}
+}
+
+func TestMatchLoop(t *testing.T) {
+	g := NewGraph([]string{"q1", "q2", "q3"}, "q1", []string{"q3"})
+	g.ConnectEmpty("q1", "q2")
+	g.ConnectEmpty("q2", "q3")
+	g.ConnectEmpty("q3", "q1")
+
+	if !g.Match("") {
 		t.Fatalf("No Match")
 	}
 
