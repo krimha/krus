@@ -39,8 +39,15 @@ func (this *node) EmptyReachable() nodeSet {
 			break
 		}
 	}
-
 	return result
+}
+
+func (this *node) ConnectEmpty(other *node) {
+	this.emptyEdges.Insert(other)
+}
+
+func (this *node) ConnectEdge(other *node, symbol rune) {
+	this.edges[symbol].Insert(other)
 }
 
 // Finite state machine
@@ -77,17 +84,17 @@ func (graph *StateMachine) Connect(source string, target string, symbol rune) {
 		newSet := newNodeSet()
 		sourceNode.SetEdges(symbol, &newSet)
 	}
-	sourceNode.Edges(symbol).Insert(targetNode)
+	sourceNode.ConnectEdge(targetNode, symbol)
 }
 
 func (graph *StateMachine) ConnectEmpty(source string, target string) {
-	sourceNode := graph.nodes[source]
-	targetNode := graph.nodes[target]
+	sourceNode := graph.Node(source)
+	targetNode := graph.Node(target)
 	if sourceNode.emptyEdges == nil {
 		newSet := newNodeSet()
 		sourceNode.emptyEdges = &newSet
 	}
-	sourceNode.emptyEdges.Insert(targetNode)
+	sourceNode.ConnectEmpty(targetNode)
 }
 
 func (graph StateMachine) Match(tomatch string) bool {
