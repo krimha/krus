@@ -89,3 +89,23 @@ func TestEmptyEdge(t *testing.T) {
 
 	
 }
+
+func TestMatchEmpty(t *testing.T) {
+	g := NewGraph([]string{"q", "r", "s", "t"}, "q", []string{"t"})
+	g.Connect("q", "r", '0')
+	g.Connect("r", "s", '0')
+	g.Connect("s", "t", '0')
+	g.Connect("t", "t", '0')
+	g.Connect("q", "r", '1')
+	g.Connect("r", "s", '1')
+	g.Connect("r", "s", '1')
+	g.Connect("s", "t", '1')
+	g.Connect("t", "t", '1')
+	g.ConnectEmpty("q", "r")
+	g.ConnectEmpty("s", "t")
+
+	if !g.Match("111") {
+		t.Fatalf("No Match")
+	}
+
+}

@@ -28,10 +28,16 @@ func (set nodeSet) Size() int {
 
 func (set nodeSet) String() string {
 	result := "["
+	counter := 0
 	for n, _ := range set.storage {
 		result += n.name + ", "
+		counter += 1
 	}
-	return result[:len(result)-2] + "]"
+	index := len(result) - 2
+	if counter == 0 { 
+		index = len(result)	
+	}
+	return result[:index] + "]"
 }
 
 

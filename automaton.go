@@ -81,6 +81,7 @@ func (graph *StateMachine) ConnectEmpty(source string, target string) {
 func (graph StateMachine) Match(tomatch string) bool {
 	currentNodeSet := newNodeSet()
 	currentNodeSet.Insert(graph.start)
+	currentNodeSet.InsertReachable()
 
 	for _, symbol := range tomatch {
 		newCurrentNodeSet := newNodeSet()
@@ -92,6 +93,7 @@ func (graph StateMachine) Match(tomatch string) bool {
 			}
 		}
 		currentNodeSet = newCurrentNodeSet
+		currentNodeSet.InsertReachable()
 	}
 
 	return currentNodeSet.ContainsAcceptNode()

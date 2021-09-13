@@ -57,3 +57,4 @@ func TestInsertReachable(t *testing.T) {
 		t.Fatalf("Error in EmptyEdge %d", set.Size())
 	}
 }
+
